@@ -14,7 +14,7 @@ h1, h2, h3, h4, h5, h6 {
 .pet-container {
   border: 2px solid red;
   padding: 5px;
-  margin: 5px;
+  margin: 10px;
 }
 .pet-container p {
   font-family: Georgia, serif;
@@ -23,5 +23,15 @@ h1, h2, h3, h4, h5, h6 {
 .pet {
   border: 2px solid #8099FF;
   padding: 2px;
-  margin: 2px;
+  margin: 5px;
+}
+.pet p {
+  display: inline;
+  margin: 5px;
+}
+
+.egg {
+  padding: 8px;
+  border-radius: 12px;
+  box-shadow: 0 4px 2px #8099FF;
 }
