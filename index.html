@@ -3,18 +3,23 @@
   <head>
     <meta charset="utf-8">
     <title>Eggumon</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
     <script src="src/index.js" charset="utf-8"></script>
-    <link rel="stylesheet" href="/css/master.css">
   </head>
   <body>
     <header>
       <h1>&#x1F95A; Eggumon &#x1F95A;</h1>
-      <button type="button" name="login">Sign Up / Sign In</button>
+      <form id="user"></form>
     </header>
     <hr/>
     <main>
-      <div id="pet-container">
-        pet container
+      <h3>My pets</h3>
+      <div class="pet-container" id="my-pets">
+        <p>my pets container splash image</p>
+      </div>
+      <h3>Other pets from around town</h3>
+      <div class="pet-container" id="other-pets">
+        <p>other pets container (populate with pets)</p>
       </div>
     </main>
   </body>
