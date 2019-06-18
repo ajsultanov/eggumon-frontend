@@ -16,6 +16,7 @@ function init(){
   let logButton = ""
   let currentUser = ""
   let allPets = []
+  let allUsers = []
 
   function logInButton() {
     userLogin.innerHTML = `
@@ -24,59 +25,74 @@ function init(){
     `
     logButton = userLogin.getElementsByTagName('BUTTON')[0]
   }
-
   logInButton()
 
   // get all pets
-  fetch(`${URL}pets`).then(r => r.json()).then(petData => {
+  fetch(`${URL}api/v1/pets`).then(r => r.json()).then(petData => {
     petData.forEach(pet => {
       allPets.push(pet)
     })
     console.log(`pets: ${allPets.length}`)
   })
 
-  /*
-      STATE 1
-      - sign in / sign up
-      - splash graphic
-      - random other pets
-
-      STATE 2
-      - sign out
-      - pet interaction area
-      - random other pets
-  */
+  // get all users
+  fetch(`${URL}api/v1/users`).then(r => r.json()).then(userData => {
+    userData.forEach(user => {
+      allUsers.push(user.name.toUpperCase())
+    })
+    console.log(allUsers)
+  })
 
   // initialize page
   // get user
-
   userLogin.addEventListener("submit", event => {
     event.preventDefault()
+    const userInput = userLogin.elements.login.value.toUpperCase()
 
-    const userInput = userLogin.elements.login
-    if (logButton.dataset.action === "login") {
-      if (userInput.value !== "") {
+    // user is not logged in
+    if (logButton.dataset.action === "login" && userInput !== "") {
 
-        fetch(`${URL}users?name=${userInput.value}`)
+      // if user IS found in allUsers array
+      if (allUsers.includes(userInput)) {
+        fetch(`${URL}api/v1/users?name=${userInput}`)
         .then(r => r.json())
-
         .then(userData => {
           if (userData.length > 0) {
+            console.log(userData)
             currentUser = userData[0].id
             logOutButton(userData)
 
-            fetch(`${URL}pets?user_id=${currentUser}`)
+            fetch(`${URL}api/v1/pets?user_id=${currentUser}`)
             .then(r => r.json())
             .then(petData => {
               renderPets(petData)
             })
           }
-          // if user not found...
-          // create user
         })
+      }
+      // if user is NOT found in allUsers array
+      else {
+        fetch(`${URL}api/v1/users`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json"
+          },
+          body: JSON.stringify({
+            name: userInput
+          })
+        })
+        .then(r => r.json())
+        .then(userData => {
+          if (userData.length > 0) {
+            console.log(userData)
+          }
+        })
+        allUsers.push(userInput)
       }
     }
 
+    // user is logged in
     if (logButton.dataset.action === "logout") {
       currentUser = ""
       myPetContainer.innerHTML = "<p>my pets container splash image</p>"
@@ -104,14 +120,7 @@ function init(){
 
       })
     } else {
-      myPetContainer.innerHTML =
-        `<p>Couldn't find any pets, ${currentUser}!!!!</p>
-         <p>This is where the CREATE PET form will be.</p>
-         <form>
-           <input type="text" value="" placeholder="New Pet Name">
-           <button type="submit" name="createPet" id="createPet">create!</button>
-         </form>
-         `
+      noPets()
     }
 
     // this could be moved outside the renderPets function if it
@@ -124,6 +133,17 @@ function init(){
       let petHTML = petConverter(p)
       otherPetContainer.innerHTML += petHTML
     })
+  }
+
+  function noPets() {
+    myPetContainer.innerHTML =
+      `<p>Couldn't find any pets, ${currentUser}!!!!</p>
+       <p>This is where the CREATE PET form will be.</p>
+       <form>
+         <input type="text" value="" placeholder="New Pet Name">
+         <button type="submit" name="createPet" id="createPet">create!</button>
+       </form>
+       `
   }
 
   function petConverter(pet) {
