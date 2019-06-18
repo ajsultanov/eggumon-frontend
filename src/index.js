@@ -8,9 +8,10 @@ function init(){
   const myPetContainer = document.getElementById("my-pets")
   const otherPetContainer = document.getElementById("other-pets")
   const panelContainer = document.getElementById("pet-control-panel")
-  const fullHealthSRC = `file:///Users/christianduncan/Development/JSProject/eggumon-frontend/src/img/fullhealth.png`
-  const halfHealthSRC = `file:///Users/christianduncan/Development/JSProject/eggumon-frontend/src/img/halfhealth.png`
-  const noHealthSRC = `file:///Users/christianduncan/Development/JSProject/eggumon-frontend/src/img/nohealth.png`
+  const fullHealthSRC = `src/img/fullhealth.png`
+  const halfHealthSRC = `src/img/halfhealth.png`
+  const noHealthSRC = `src/img/nohealth.png`
+
 
 
   let logButton = ""
@@ -66,6 +67,7 @@ function init(){
             .then(r => r.json())
             .then(petData => {
               renderPets(petData)
+              console.log(petData)
             })
           }
         })
