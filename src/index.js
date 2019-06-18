@@ -63,7 +63,7 @@ function init(){
         .then(r => r.json())
         .then(userData => {
 
-          logOutButton(userData)
+          logOutButton()
 
           console.log("current user pets:", currentUser.pets)
           renderPets(currentUser.pets)
@@ -95,7 +95,7 @@ function init(){
           currentUser = userData
           allUsers.push(userData)
           renderPets(userData.pets)
-          logOutButton(userData)
+          logOutButton()
         })
       }
     }
@@ -108,9 +108,9 @@ function init(){
     }
   })
 
-  function logOutButton(user) {
+  function logOutButton() {
     userLogin.innerHTML =
-      `<button type="submit" data-action="logout">Sign Out</button> ${user.name}`
+      `<button type="submit" data-action="logout">Sign Out</button> ${currentUser.name}`
     logButton = userLogin.getElementsByTagName('BUTTON')[0]
   }
 
