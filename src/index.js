@@ -19,7 +19,6 @@ function init(){
     `
     logButton = userLogin.getElementsByTagName('BUTTON')[0]
   }
-
   logInButton()
 
   // get all pets
@@ -34,31 +33,18 @@ function init(){
   fetch(`${URL}api/v1/users`).then(r => r.json()).then(userData => {
     userData.forEach(user => {
       allUsers.push(user.name.toUpperCase())
-      console.log(user.name.toUpperCase())
     })
+    console.log(allUsers)
   })
-
-
-  /*
-      STATE 1
-      - sign in / sign up
-      - splash graphic
-      - random other pets
-
-      STATE 2
-      - sign out
-      - pet interaction area
-      - random other pets
-  */
 
   // initialize page
   // get user
-
   userLogin.addEventListener("submit", event => {
     event.preventDefault()
     const userInput = userLogin.elements.login.value.toUpperCase()
 
-    if (logButton.dataset.action === "login" && userInput.value !== "") {
+    // user is not logged in
+    if (logButton.dataset.action === "login" && userInput !== "") {
 
       // if user IS found in allUsers array
       if (allUsers.includes(userInput)) {
@@ -94,17 +80,13 @@ function init(){
         .then(userData => {
           if (userData.length > 0) {
             console.log(userData)
-            currentUser = userData[0].id
-            logOutButton(userData)
-            console.log("current user:")
-            console.log(currentUser)
-            renderPets()
           }
         })
         allUsers.push(userInput)
       }
     }
 
+    // user is logged in
     if (logButton.dataset.action === "logout") {
       currentUser = ""
       myPetContainer.innerHTML = "<p>my pets container splash image</p>"
@@ -127,14 +109,7 @@ function init(){
         myPetContainer.innerHTML += petHTML
       })
     } else {
-      myPetContainer.innerHTML =
-        `<p>Couldn't find any pets, ${currentUser}!!!!</p>
-         <p>This is where the CREATE PET form will be.</p>
-         <form>
-           <input type="text" value="" placeholder="New Pet Name">
-           <button type="submit" name="createPet" id="createPet">create!</button>
-         </form>
-         `
+      noPets()
     }
 
     // this could be moved outside the renderPets function if it
@@ -147,6 +122,17 @@ function init(){
       let petHTML = petConverter(p)
       otherPetContainer.innerHTML += petHTML
     })
+  }
+
+  function noPets() {
+    myPetContainer.innerHTML =
+      `<p>Couldn't find any pets, ${currentUser}!!!!</p>
+       <p>This is where the CREATE PET form will be.</p>
+       <form>
+         <input type="text" value="" placeholder="New Pet Name">
+         <button type="submit" name="createPet" id="createPet">create!</button>
+       </form>
+       `
   }
 
   function petConverter(pet) {
