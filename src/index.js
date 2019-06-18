@@ -11,6 +11,7 @@ function init(){
   let currentUser = ""
   let allPets = []
   let allUsers = []
+  let userNames = []
 
   function logInButton() {
     userLogin.innerHTML = `
@@ -32,9 +33,11 @@ function init(){
   // get all users
   fetch(`${URL}api/v1/users`).then(r => r.json()).then(userData => {
     userData.forEach(user => {
-      allUsers.push(user.name.toUpperCase())
+      allUsers.push(user)
     })
+    userNames = allUsers.map(user => user.name.toUpperCase())
     console.log(allUsers)
+    console.log(userNames)
   })
 
   // initialize page
@@ -47,7 +50,7 @@ function init(){
     if (logButton.dataset.action === "login" && userInput !== "") {
 
       // if user IS found in allUsers array
-      if (allUsers.includes(userInput)) {
+      if (userNames.includes(userInput)) {
         fetch(`${URL}api/v1/users?name=${userInput}`)
         .then(r => r.json())
         .then(userData => {
