@@ -165,14 +165,14 @@ function init(){
     return `
         <div class="pet-panel">
         <img src="src/img/${pet.img}" alt="Pet not Pictured">
-
+        
+        <span id="panel-button" name="heart">
+          <img id="health" src="src/img/fullhealth.png" alt="health">
+        </span>
         </div>
 
 
         <div id="btn-group" class="btn-group">
-          <button id="panel-button" name="heart">
-            <img id="health" src="src/img/fullhealth.png" alt="health">
-          </button>
           <button id="panel-button" name="eat">
           <img id="burger" src="src/img/burger.png" alt="feed">
           </button>
