@@ -10,6 +10,7 @@ function init(){
   let logButton = ""
   let currentUser = ""
   let allPets = []
+  let allUsers = []
 
   function logInButton() {
     userLogin.innerHTML = `
@@ -22,12 +23,21 @@ function init(){
   logInButton()
 
   // get all pets
-  fetch(`${URL}pets`).then(r => r.json()).then(petData => {
+  fetch(`${URL}api/v1/pets`).then(r => r.json()).then(petData => {
     petData.forEach(pet => {
       allPets.push(pet)
     })
     console.log(`pets: ${allPets.length}`)
   })
+
+  // get all users
+  fetch(`${URL}api/v1/users`).then(r => r.json()).then(userData => {
+    userData.forEach(user => {
+      allUsers.push(user.name.toUpperCase())
+      console.log(user.name.toUpperCase())
+    })
+  })
+
 
   /*
       STATE 1
@@ -46,28 +56,52 @@ function init(){
 
   userLogin.addEventListener("submit", event => {
     event.preventDefault()
+    const userInput = userLogin.elements.login.value.toUpperCase()
 
-    const userInput = userLogin.elements.login
-    if (logButton.dataset.action === "login") {
-      if (userInput.value !== "") {
+    if (logButton.dataset.action === "login" && userInput.value !== "") {
 
-        fetch(`${URL}users?name=${userInput.value}`)
+      // if user IS found in allUsers array
+      if (allUsers.includes(userInput)) {
+        fetch(`${URL}api/v1/users?name=${userInput}`)
         .then(r => r.json())
-
         .then(userData => {
           if (userData.length > 0) {
+            console.log(userData)
             currentUser = userData[0].id
             logOutButton(userData)
 
-            fetch(`${URL}pets?user_id=${currentUser}`)
+            fetch(`${URL}api/v1/pets?user_id=${currentUser}`)
             .then(r => r.json())
             .then(petData => {
               renderPets(petData)
             })
           }
-          // if user not found...
-          // create user
         })
+      }
+      // if user is NOT found in allUsers array
+      else {
+        fetch(`${URL}api/v1/users`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json"
+          },
+          body: JSON.stringify({
+            name: userInput
+          })
+        })
+        .then(r => r.json())
+        .then(userData => {
+          if (userData.length > 0) {
+            console.log(userData)
+            currentUser = userData[0].id
+            logOutButton(userData)
+            console.log("current user:")
+            console.log(currentUser)
+            renderPets()
+          }
+        })
+        allUsers.push(userInput)
       }
     }
 
