@@ -7,6 +7,13 @@ function init(){
   const userLogin = document.getElementById("user")
   const myPetContainer = document.getElementById("my-pets")
   const otherPetContainer = document.getElementById("other-pets")
+  const panelContainer = document.getElementById("pet-control-panel")
+  const fullHealthSRC = `src/img/fullhealth.png`
+  const halfHealthSRC = `src/img/halfhealth.png`
+  const noHealthSRC = `src/img/nohealth.png`
+
+
+
   let logButton = ""
   let currentUser = ""
   let allPets = []
@@ -48,14 +55,14 @@ function init(){
 
     // user is not logged in
     if (logButton.dataset.action === "login" && userInput !== "") {
-
       // if user IS found in allUsers array
       if (userNames.includes(userInput)) {
         fetch(`${URL}api/v1/users?name=${userInput}`)
         .then(r => r.json())
         .then(userData => {
+
+          console.log(userData)
           if (userData.length > 0) {
-            console.log(userData)
             currentUser = userData[0].id
             logOutButton(userData)
 
@@ -63,6 +70,7 @@ function init(){
             .then(r => r.json())
             .then(petData => {
               renderPets(petData)
+              console.log(petData)
             })
           }
         })
@@ -104,12 +112,16 @@ function init(){
   }
 
   function renderPets(pets) {
-    console.log("renderPets")
     myPetContainer.innerHTML = ""
+    panelContainer.innerHTML = ""
     if (pets.length > 0) {
       pets.forEach(p => {
         let petHTML = petConverter(p)
         myPetContainer.innerHTML += petHTML
+        //render pet control panel html here
+        let controlHTML = renderControlPanel(p)
+        panelContainer.innerHTML += controlHTML
+
       })
     } else {
       noPets()
@@ -139,20 +151,63 @@ function init(){
   }
 
   function petConverter(pet) {
-    console.log("petConverter")
     return `
     <div class="pet">
       <img src="src/img/egg.png" alt="a speckled egg">
-      <p>pet id: ${pet.id} &nbsp; ~ &nbsp; ${pet.name}</p>
+      <img src="src/img/${pet.img}" alt="Pet not Pictured">
+
+      <p>id: ${pet.id} &nbsp; ~ &nbsp; ${pet.name}</p>
     </div>
     `
         // render data (sprites)
         // render data (info)
   }
 
+  function renderControlPanel(pet){
+    console.log("petcontrolpanel")
+    return `
+        <div class="pet-panel">
+        <img src="src/img/${pet.img}" alt="Pet not Pictured">
+
+        </div>
+
+
+        <div id="btn-group" class="btn-group">
+          <button id="panel-button" name="heart">
+            <img id="health" src="src/img/fullhealth.png" alt="health">
+          </button>
+          <button id="panel-button" name="eat">
+          <img id="burger" src="src/img/burger.png" alt="feed">
+          </button>
+          <button id="panel-button" name="toilet">
+          <img id="toilet" src="src/img/toilet-paper.png" alt="toilet">
+          </button>
+
+        </div>
+
+    `
+  }
+
   // listen for clicks on:
     // create new pet form
     // "edit" pet (feed, play, etc) buttons
+    document.addEventListener('click', event => {
+
+      if(event.target.id === "toilet" || "burger"){
+
+        if (document.querySelector("#health").src === fullHealthSRC){
+          console.log("full -> no")
+          document.querySelector("#health").src = noHealthSRC
+        } else if (document.querySelector("#health").src === noHealthSRC){
+          console.log("no -> half")
+          document.querySelector("#health").src = halfHealthSRC
+        } else {
+          console.log("half -> full")
+          document.querySelector("#health").src = fullHealthSRC
+        }
+      }
+    })
+
     // delete pet
 
 }
