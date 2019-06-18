@@ -11,6 +11,7 @@ function init(){
   const fullHealthSRC = `src/img/fullhealth.png`
   const halfHealthSRC = `src/img/halfhealth.png`
   const noHealthSRC = `src/img/nohealth.png`
+  
 
 
 
@@ -189,14 +190,14 @@ function init(){
   // listen for clicks on:
     // create new pet form
     // "edit" pet (feed, play, etc) buttons
-    document.addEventListener('click', event => {
-
+    panelContainer.addEventListener('click', event => {
+      
       if(event.target.id === "toilet" || "burger"){
 
-        if (document.querySelector("#health").src === fullHealthSRC){
+        if (document.querySelector("#health").getAttribute("src") === fullHealthSRC){
           console.log("full -> no")
           document.querySelector("#health").src = noHealthSRC
-        } else if (document.querySelector("#health").src === noHealthSRC){
+        } else if (document.querySelector("#health").getAttribute("src") === noHealthSRC){
           console.log("no -> half")
           document.querySelector("#health").src = halfHealthSRC
         } else {
