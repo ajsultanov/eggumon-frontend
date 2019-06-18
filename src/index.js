@@ -9,6 +9,7 @@ function init(){
   const otherPetContainer = document.getElementById("other-pets")
   let logButton = ""
   let currentUser = ""
+  let allPets = []
 
   function logInButton() {
     userLogin.innerHTML = `
@@ -19,10 +20,8 @@ function init(){
   }
 
   logInButton()
-  console.log(logButton)
 
   // get all pets
-  let allPets = []
   fetch(`${URL}pets`).then(r => r.json()).then(petData => {
     petData.forEach(pet => {
       allPets.push(pet)
