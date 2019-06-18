@@ -7,7 +7,19 @@ function init(){
   const userLogin = document.getElementById("user")
   const myPetContainer = document.getElementById("my-pets")
   const otherPetContainer = document.getElementById("other-pets")
-  let userId = ""
+  let logButton = ""
+  let currentUser = ""
+
+  function logInButton() {
+    userLogin.innerHTML = `
+      <button type="submit" data-action="login">Sign Up / Sign In</button>
+      <input type="text" name="login" id="login" value="" placeholder="Username">
+    `
+    logButton = userLogin.getElementsByTagName('BUTTON')[0]
+  }
+
+  logInButton()
+  console.log(logButton)
 
   // get all pets
   let allPets = []
@@ -33,33 +45,45 @@ function init(){
   // initialize page
   // get user
 
-  if (userId === "") {
-    userLogin.innerHTML =
-      `<button type="submit">Sign Up / Sign In</button>
-       <input type="text" name="login" id="login" value="" placeholder="Username">`
-  } else {
-    userLogin.innerHTML =
-      `<button type="submit" id="logout">Sign Out</button>`
-  }
-
   userLogin.addEventListener("submit", event => {
     event.preventDefault()
 
     const userInput = userLogin.elements.login
-    if (userInput.value !== "") {
-      userId = userInput.value
-      console.log(`userId: ${userId}`)
+    if (logButton.dataset.action === "login") {
+      if (userInput.value !== "") {
 
-      // if user already exists {
-      // userLogin.innerHTML =
-      //   `<button type="submit" id="logout">Sign Out</button>`
-      // }
+        fetch(`${URL}users?name=${userInput.value}`)
+        .then(r => r.json())
 
-      fetch(`${URL}pets?user_id=${userId}`)
-      .then(r => r.json())
-      .then(petData => renderPets(petData))
+        .then(userData => {
+          if (userData.length > 0) {
+            currentUser = userData[0].id
+            logOutButton(userData)
+
+            fetch(`${URL}pets?user_id=${currentUser}`)
+            .then(r => r.json())
+            .then(petData => {
+              renderPets(petData)
+            })
+          }
+          // if user not found...
+          // create user
+        })
+      }
+    }
+
+    if (logButton.dataset.action === "logout") {
+      currentUser = ""
+      myPetContainer.innerHTML = "<p>my pets container splash image</p>"
+      logInButton()
     }
   })
+
+  function logOutButton(user) {
+    userLogin.innerHTML =
+      `<button type="submit" data-action="logout">Sign Out</button> ${user[0].name}`
+    logButton = userLogin.getElementsByTagName('BUTTON')[0]
+  }
 
   function renderPets(pets) {
     console.log("renderPets")
@@ -71,7 +95,7 @@ function init(){
       })
     } else {
       myPetContainer.innerHTML =
-        `<p>Couldn"t find any pets, ${userId}!!!!</p>
+        `<p>Couldn't find any pets, ${currentUser}!!!!</p>
          <p>This is where the CREATE PET form will be.</p>
          <form>
            <input type="text" value="" placeholder="New Pet Name">
@@ -79,6 +103,9 @@ function init(){
          </form>
          `
     }
+
+    // this could be moved outside the renderPets function if it
+    // should happen automatically
     // generate 3 random numbers from 1 - total # of pets
     // render those pets here
     otherPetContainer.innerHTML = ""
