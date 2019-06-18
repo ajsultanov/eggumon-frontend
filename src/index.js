@@ -11,7 +11,7 @@ function init(){
   const fullHealthSRC = `file:///Users/christianduncan/Development/JSProject/eggumon-frontend/src/img/fullhealth.png`
   const halfHealthSRC = `file:///Users/christianduncan/Development/JSProject/eggumon-frontend/src/img/halfhealth.png`
   const noHealthSRC = `file:///Users/christianduncan/Development/JSProject/eggumon-frontend/src/img/nohealth.png`
-  
+
 
   let logButton = ""
   let currentUser = ""
@@ -51,14 +51,14 @@ function init(){
 
     // user is not logged in
     if (logButton.dataset.action === "login" && userInput !== "") {
-
       // if user IS found in allUsers array
       if (allUsers.includes(userInput)) {
         fetch(`${URL}api/v1/users?name=${userInput}`)
         .then(r => r.json())
         .then(userData => {
+
+          console.log(userData)
           if (userData.length > 0) {
-            console.log(userData)
             currentUser = userData[0].id
             logOutButton(userData)
 
@@ -107,7 +107,6 @@ function init(){
   }
 
   function renderPets(pets) {
-    console.log("renderPets")
     myPetContainer.innerHTML = ""
     panelContainer.innerHTML = ""
     if (pets.length > 0) {
@@ -147,12 +146,11 @@ function init(){
   }
 
   function petConverter(pet) {
-    console.log("petConverter")
     return `
     <div class="pet">
       <img src="src/img/egg.png" alt="a speckled egg">
       <img src="src/img/${pet.img}" alt="Pet not Pictured">
-      
+
       <p>id: ${pet.id} &nbsp; ~ &nbsp; ${pet.name}</p>
     </div>
     `
@@ -165,10 +163,10 @@ function init(){
     return `
         <div class="pet-panel">
         <img src="src/img/${pet.img}" alt="Pet not Pictured">
-          
+
         </div>
-    
-      
+
+
         <div id="btn-group" class="btn-group">
           <button id="panel-button" name="heart">
             <img id="health" src="src/img/fullhealth.png" alt="health">
@@ -179,9 +177,9 @@ function init(){
           <button id="panel-button" name="toilet">
           <img id="toilet" src="src/img/toilet-paper.png" alt="toilet">
           </button>
-        
+
         </div>
-    
+
     `
   }
 
@@ -189,9 +187,9 @@ function init(){
     // create new pet form
     // "edit" pet (feed, play, etc) buttons
     document.addEventListener('click', event => {
-      
+
       if(event.target.id === "toilet" || "burger"){
-        
+
         if (document.querySelector("#health").src === fullHealthSRC){
           console.log("full -> no")
           document.querySelector("#health").src = noHealthSRC
@@ -204,7 +202,7 @@ function init(){
         }
       }
     })
-    
+
     // delete pet
 
 }
