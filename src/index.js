@@ -18,7 +18,6 @@ function init(){
   let currentUser = ""
   let allPets = []
   let allUsers = []
-  let userNames = []
 
   function logInButton() {
     userLogin.innerHTML = `
@@ -42,26 +41,25 @@ function init(){
     userData.forEach(user => {
       allUsers.push(user)
     })
-    userNames = allUsers.map(user => user.name.toUpperCase())
     console.log(allUsers)
-    console.log(userNames)
   })
 
   // initialize page
   // get user
   userLogin.addEventListener("submit", event => {
     event.preventDefault()
-    const userInput = userLogin.elements.login.value.toUpperCase()
+    const userInput = userLogin.elements.login.value
 
     // user is not logged in
     if (logButton.dataset.action === "login" && userInput !== "") {
       // if user IS found in allUsers array
-      if (userNames.includes(userInput)) {
-        fetch(`${URL}api/v1/users?name=${userInput}`)
+      if (allUsers.some(user => user.name === userInput)) {
+        fetch(`${URL}api/v1/users/${userInput}`)
         .then(r => r.json())
         .then(userData => {
 
           console.log(userData)
+
           if (userData.length > 0) {
             currentUser = userData[0].id
             logOutButton(userData)
