@@ -11,7 +11,7 @@ function init(){
   const fullHealthSRC = `src/img/fullhealth.png`
   const halfHealthSRC = `src/img/halfhealth.png`
   const noHealthSRC = `src/img/nohealth.png`
-  
+
 
 
 
@@ -30,12 +30,12 @@ function init(){
   logInButton()
 
   // get all pets
-  fetch(`${URL}api/v1/pets`).then(r => r.json()).then(petData => {
-    petData.forEach(pet => {
-      allPets.push(pet)
-    })
-    console.log(`pets: ${allPets.length}`)
-  })
+  // fetch(`${URL}api/v1/pets`).then(r => r.json()).then(petData => {
+  //   petData.forEach(pet => {
+  //     allPets.push(pet)
+  //   })
+  //   console.log(`pets: ${allPets.length}`)
+  // })
 
   // get all users
   fetch(`${URL}api/v1/users`).then(r => r.json()).then(userData => {
@@ -49,29 +49,32 @@ function init(){
   // get user
   userLogin.addEventListener("submit", event => {
     event.preventDefault()
-    const userInput = userLogin.elements.login.value
 
     // user is not logged in
-    if (logButton.dataset.action === "login" && userInput !== "") {
+    if (logButton.dataset.action === "login") {
+    const userInput = userLogin.elements.login.value
+
       // if user IS found in allUsers array
       if (allUsers.some(user => user.name === userInput)) {
-        fetch(`${URL}api/v1/users/${userInput}`)
+        currentUser = allUsers.find(user => user.name === userInput)
+        console.log("current user:", currentUser)
+
+        fetch(`${URL}api/v1/users/${currentUser.id}`)
         .then(r => r.json())
         .then(userData => {
 
-          console.log(userData)
+          logOutButton(userData)
 
-          if (userData.length > 0) {
-            currentUser = userData[0].id
-            logOutButton(userData)
+          console.log("current user pets:", currentUser.pets)
+          renderPets(currentUser.pets)
 
-            fetch(`${URL}api/v1/pets?user_id=${currentUser}`)
-            .then(r => r.json())
-            .then(petData => {
-              renderPets(petData)
-              console.log(petData)
-            })
-          }
+          // fetch(`${URL}api/v1/pets?user_id=${currentUser}`)
+          // .then(r => r.json())
+          // .then(petData => {
+          //   renderPets(petData)
+          //   console.log(petData)
+          // })
+
         })
       }
       // if user is NOT found in allUsers array
@@ -88,25 +91,26 @@ function init(){
         })
         .then(r => r.json())
         .then(userData => {
-          if (userData.length > 0) {
-            console.log(userData)
-          }
+          console.log("current user:", userData)
+          currentUser = userData
+          allUsers.push(userData)
+          renderPets(userData.pets)
+          logOutButton(userData)
         })
-        allUsers.push(userInput)
       }
     }
-
     // user is logged in
     if (logButton.dataset.action === "logout") {
       currentUser = ""
       myPetContainer.innerHTML = "<p>my pets container splash image</p>"
+      panelContainer.innerHTML = ""
       logInButton()
     }
   })
 
   function logOutButton(user) {
     userLogin.innerHTML =
-      `<button type="submit" data-action="logout">Sign Out</button> ${user[0].name}`
+      `<button type="submit" data-action="logout">Sign Out</button> ${user.name}`
     logButton = userLogin.getElementsByTagName('BUTTON')[0]
   }
 
@@ -122,20 +126,14 @@ function init(){
         panelContainer.innerHTML += controlHTML
 
       })
-    } else {
+    }
+    else {
       noPets()
     }
-
-    // this could be moved outside the renderPets function if it
-    // should happen automatically
     // generate 3 random numbers from 1 - total # of pets
     // render those pets here
-    otherPetContainer.innerHTML = ""
-    const otherPets = allPets.slice(0, 3)
-    otherPets.forEach(p => {
-      let petHTML = petConverter(p)
-      otherPetContainer.innerHTML += petHTML
-    })
+    // this could be moved outside the renderPets
+    // function if it should happen automatically
   }
 
   function noPets() {
@@ -191,7 +189,7 @@ function init(){
     // create new pet form
     // "edit" pet (feed, play, etc) buttons
     panelContainer.addEventListener('click', event => {
-      
+
       if(event.target.id === "toilet" || "burger"){
 
         if (document.querySelector("#health").getAttribute("src") === fullHealthSRC){
