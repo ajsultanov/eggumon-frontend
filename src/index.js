@@ -13,6 +13,14 @@ function init(){
   const halfHealthSRC = `src/img/halfhealth.png`
   const noHealthSRC = `src/img/nohealth.png`
 
+  const incrementpet = document.getElementById("incrementpet")
+  const foodBtn = document.getElementById("foodbtn")
+  const trainBtn = document.getElementById("trainbtn")
+  const cleanbtn = document.getElementById("cleanbtn")
+  const statsbtn = document.getElementById("statsbtn")
+  const playbtn = document.getElementById("playbtn")
+  const sleepbtn = document.getElementById("sleepbtn")
+
   let logButton = ""
   let currentUser = ""
   let allPets = []
@@ -211,14 +219,37 @@ function init(){
     })
 
   myPetContainer.addEventListener("click", (e) => {
-    // console.log("click clack");
+    // this function just finds and sets the current pet when a user clicks on a pet in the all pets container
     if(e.target.className === "pet" || e.target.tagName === "IMG" || e.target.tagName === "P"){
-      console.log(e.target.id);
-      console.log(currentUser.pets);
+      // console.log(e.target.id);
       currentPet = currentUser.pets.find(pet => {return pet.id === parseInt(e.target.id)})
-      console.log(currentPet);
+      // console.log(currentPet);
     }
   })
+
+  incrementpet.addEventListener("click", (e) => {
+    console.log("incrementing stuff");
+    if(e.target.id === "foodbtn"){
+      console.log("food btn");
+    }
+    else if(e.target.id === "trainbtn"){
+      console.log("trainbtn");
+    }
+    else if(e.target.id === "cleanbtn"){
+      console.log("cleanbtn");
+    }
+    else if(e.target.id === "statsbtn"){
+      console.log("statsbtn");
+    }
+    else if(e.target.id === "playbtn"){
+      console.log("playbtn");
+    }
+    else if(e.target.id === "sleepbtn"){
+      console.log("sleepbtn");
+    }
+  })
+
+
 
 
 
