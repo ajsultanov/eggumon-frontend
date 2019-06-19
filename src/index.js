@@ -21,6 +21,16 @@ function init(){
   const playbtn = document.getElementById("playbtn")
   const sleepbtn = document.getElementById("sleepbtn")
 
+  const currentpetstatus = document.getElementById("currentpetstatus")
+  let currentPetName = document.getElementById("currentPetName")
+  let currentPetAge = document.getElementById("currentPetAge")
+  let currentPetWeight = document.getElementById("currentPetWeight")
+  let currentPetSpecialty = document.getElementById("currentPetSpecialty")
+  let currentPetHealth = document.getElementById("currentPetHealth")
+  let currentPetHappiness = document.getElementById("currentPetHappiness")
+  let currentPetSkills = document.getElementById("currentPetSkills")
+  let currentUserName = document.getElementById("currentUserName")
+
   let logButton = ""
   let currentUser = ""
   let allPets = []
