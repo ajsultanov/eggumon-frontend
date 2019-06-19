@@ -68,6 +68,16 @@ h1, h2, h3, h4, h5, h6 {
   background-color: #ececec;
 }
 
+
+
+.panel {
+  display: flex;
+  flex-direction: row;
+  background-color: white;
+  justify-content: space-around;
+  align-items: center;
+}
+
 .grid-container {
   display: inline-grid;
   grid-template-columns: 50px 50px 50px;
@@ -118,10 +128,10 @@ h1, h2, h3, h4, h5, h6 {
   border-radius: 10px;
 }
 .flex-container p {
-  font-size: 12px;
-  margin: 1px;
+  font-size: 16px;
+  margin: 2px;
   padding: 0px;
 }
 .flex-item {
-  background-color: yellow;
+  background-color: lavender;
 }
