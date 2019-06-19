@@ -22,34 +22,35 @@
       </div>
 
       <div class="panel">
-        <div class="grid-container">
-          <button type="button" name="button" class="grid-item"><img src="./src/img/food.png" alt=""></button>
-          <button type="button" name="button" class="grid-item"><img src="./src/img/train.png" alt=""></button>
-          <button type="button" name="button" class="grid-item"><img src="./src/img/tp.png" alt=""></button>
+
+        <div class="grid-container" id="incrementpet">
+          <button type="button" name="button" id="foodbtn" class="grid-item"><src="./src/img/food.png" alt=""></button>
+          <button type="button" name="button" id="trainbtn" class="grid-item"><img src="./src/img/train.png" alt=""></button>
+          <button type="button" name="button" id="cleanbtn" class="grid-item"><img src="./src/img/tp.png" alt=""></button>
           <div class="sprite">
             <img src="./src/img/2a.gif" alt="">
           </div>
           <div class="status">
             <img src="./src/img/make.png" alt="">
           </div>
-          <button type="button" name="button" class="grid-item"><img src="./src/img/info.png" alt=""></button>
-          <button type="button" name="button" class="grid-item"><img src="./src/img/play.png" alt=""></button>
-          <button type="button" name="button" class="grid-item"><img src="./src/img/clock.png" alt=""></button>
+          <button type="button" name="button" id="statsbtn" class="grid-item"><img src="./src/img/info.png" alt=""></button>
+          <button type="button" name="button" id="playbtn" class="grid-item"><img src="./src/img/play.png" alt=""></button>
+          <button type="button" name="button" id="sleepbtn" class="grid-item"><img src="./src/img/clock.png" alt=""></button>
         </div>
 
-        <div class="flex-container">
-          <p class="flex-item">name: {abc}</p>
-          <p class="flex-item">age: {abc}</p>
-          <p class="flex-item">weight: {#}</p>
-          <p class="flex-item">specialty: {abc}</p>
-          <p class="flex-item">health: {sprites}
-            <img src="./src/img/heart16_full.png" alt="">
+        <div class="flex-container" id="currentpetstatus">
+          <p class="flex-item" id="currentPetName">name: {abc}</p>
+          <p class="flex-item" id="currentPetAge">age: {abc}</p>
+          <p class="flex-item" id="currentPetWeight">weight: {#}</p>
+          <p class="flex-item" id="currentPetSpecialty">specialty: {abc}</p>
+          <p class="flex-item" id="currentPetHealth">health: {sprites}
+            <img src="./src/img/heart16_full.png" alt="" style="background-color:black;">
             <img src="./src/img/heart16_full.png" alt="">
             <img src="./src/img/heart16_full.png" alt="">
           </p>
-          <p class="flex-item">happiness: {sprites}</p>
-          <p class="flex-item">skill points: {sprites}</p>
-          <p class="flex-item">user: {abc}</p>
+          <p class="flex-item" id="currentPetHappiness">happiness: {sprites}</p>
+          <p class="flex-item" id="currentPetSkills">skill points: {sprites}</p>
+          <p class="flex-item" id="currentUserName">user: {abc}</p>
         </div>
       </div>
 
