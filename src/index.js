@@ -83,7 +83,7 @@ function init(){
           //   renderPets(petData)
           //   console.log(petData)
           // })
-          
+
         })
       }
       // if user is NOT found in allUsers array
@@ -277,6 +277,13 @@ function init(){
     }
   })
 
+
+  myPetContainer.addEventListener("click", (e) => {
+    if(e.target.className === "pet" || e.target.tagName === "IMG" || e.target.tagName === "P"){
+      currentPet = currentUser.pets.find(pet => {return pet.id === parseInt(e.target.id)})
+      console.log(currentPet);
+    }
+  })
 
 
 
