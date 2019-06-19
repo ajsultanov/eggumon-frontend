@@ -12,9 +12,6 @@ function init(){
   const halfHealthSRC = `src/img/halfhealth.png`
   const noHealthSRC = `src/img/nohealth.png`
 
-
-
-
   let logButton = ""
   let currentUser = ""
   let allPets = []
@@ -28,14 +25,6 @@ function init(){
     logButton = userLogin.getElementsByTagName('BUTTON')[0]
   }
   logInButton()
-
-  // get all pets
-  // fetch(`${URL}api/v1/pets`).then(r => r.json()).then(petData => {
-  //   petData.forEach(pet => {
-  //     allPets.push(pet)
-  //   })
-  //   console.log(`pets: ${allPets.length}`)
-  // })
 
   // get all users
   fetch(`${URL}api/v1/users`).then(r => r.json()).then(userData => {
@@ -165,7 +154,7 @@ function init(){
     return `
         <div class="pet-panel">
         <img src="src/img/${pet.img}" alt="Pet not Pictured">
-        
+
         <span id="panel-button" name="heart">
           <img id="health" src="src/img/fullhealth.png" alt="health">
         </span>
