@@ -83,7 +83,7 @@ function init(){
           //   renderPets(petData)
           //   console.log(petData)
           // })
-
+          
         })
       }
       // if user is NOT found in allUsers array
@@ -167,6 +167,24 @@ function init(){
     `
         // render data (sprites)
         // render data (info)
+  }
+
+  function renderCurrentPetStatus(pet){
+    console.log("pet status")
+    return `
+    <p class="flex-item" id="currentPetName">name: ${pet.name}</p>
+    <p class="flex-item" id="currentPetAge">age: ${pet.age}</p>
+    <p class="flex-item" id="currentPetWeight">weight: ${pet.weight}</p>
+    <p class="flex-item" id="currentPetSpecialty">specialty: ${pet.specialty}</p>
+    <p class="flex-item" id="currentPetHealth">health: ${pet.health}
+      <img src="./src/img/heart16_full.png" alt="" style="background-color:black;">
+      <img src="./src/img/heart16_full.png" alt="">
+      <img src="./src/img/heart16_full.png" alt="">
+    </p>
+    <p class="flex-item" id="currentPetHappiness">happiness: ${pet.happiness}</p>
+    <p class="flex-item" id="currentPetSkills">skill points: ${pet.skill_points}</p>
+    <p class="flex-item" id="currentUserName">user: ${currentUser.name}</p>
+    `
   }
 
   function renderControlPanel(pet){
