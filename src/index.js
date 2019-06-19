@@ -13,7 +13,7 @@ function init(){
   const halfHealthSRC = `src/img/halfhealth.png`
   const noHealthSRC = `src/img/nohealth.png`
 
-  const incrementpet = document.getElementById("incrementpet")
+  const incrementpetContainer = document.getElementById("incrementpet")
   const foodBtn = document.getElementById("foodbtn")
   const trainBtn = document.getElementById("trainbtn")
   const cleanbtn = document.getElementById("cleanbtn")
@@ -21,7 +21,7 @@ function init(){
   const playbtn = document.getElementById("playbtn")
   const sleepbtn = document.getElementById("sleepbtn")
 
-  const currentpetstatus = document.getElementById("currentpetstatus")
+  const currentpetstatusContainer = document.getElementById("currentpetstatus")
   let currentPetName = document.getElementById("currentPetName")
   let currentPetAge = document.getElementById("currentPetAge")
   let currentPetWeight = document.getElementById("currentPetWeight")
@@ -170,21 +170,15 @@ function init(){
   }
 
   function renderCurrentPetStatus(pet){
-    console.log("pet status")
-    return `
-    <p class="flex-item" id="currentPetName">name: ${pet.name}</p>
-    <p class="flex-item" id="currentPetAge">age: ${pet.age}</p>
-    <p class="flex-item" id="currentPetWeight">weight: ${pet.weight}</p>
-    <p class="flex-item" id="currentPetSpecialty">specialty: ${pet.specialty}</p>
-    <p class="flex-item" id="currentPetHealth">health: ${pet.health}
-      <img src="./src/img/heart16_full.png" alt="" style="background-color:black;">
-      <img src="./src/img/heart16_full.png" alt="">
-      <img src="./src/img/heart16_full.png" alt="">
-    </p>
-    <p class="flex-item" id="currentPetHappiness">happiness: ${pet.happiness}</p>
-    <p class="flex-item" id="currentPetSkills">skill points: ${pet.skill_points}</p>
-    <p class="flex-item" id="currentUserName">user: ${currentUser.name}</p>
-    `
+    // console.log("pet status")
+    currentPetName.innerText = `name: ${pet.name}`
+    currentPetAge.innerText = `age: ${pet.age}`
+    currentPetWeight.innerText = `weight: ${pet.weight}`
+    currentPetSpecialty.innerText = `specialty: ${pet.specialty}`
+    currentPetHealth.innerText = `health: ${pet.health}`
+    currentPetHappiness.innerText = `health: ${pet.health}`
+    currentPetSkills.innerText = `skill points: ${pet.skill_points}`
+    currentUserName.innerText = `user: ${currentUser.name}`
   }
 
   function renderControlPanel(pet){
@@ -249,16 +243,72 @@ function init(){
   myPetContainer.addEventListener("click", (e) => {
     // this function just finds and sets the current pet when a user clicks on a pet in the all pets container
     if(e.target.className === "pet" || e.target.tagName === "IMG" || e.target.tagName === "P"){
-      // console.log(e.target.id);
       currentPet = currentUser.pets.find(pet => {return pet.id === parseInt(e.target.id)})
       // console.log(currentPet);
+      // current pet is the clicked on pet
+      // then populate the pet's stats in the stat box below
+      // debugger
+      renderCurrentPetStatus(currentPet)
     }
   })
 
   incrementpet.addEventListener("click", (e) => {
-    console.log("incrementing stuff");
+    // console.log("incrementing stuff");
     if(e.target.id === "foodbtn"){
-      console.log("food btn");
+      // console.log("pushing food btn");
+
+      // if hungry is TRUE
+      // hungry boolean needs to change to false
+      // increment the health
+      // increment the happiness
+      if(currentPet.hungry === true){
+        // console.log("pet is hungry")
+        currentPet.happiness += 1
+        currentPet.health += 1
+        currentPet.hungry = false
+        // console.log(currentPet);
+        currentPetHappiness.innerText = `happiness: ${currentPet.happiness}`
+        currentPetHealth.innerText = `health: ${currentPet.health}`
+        // console.log('updated the DOM, sending a fetch');
+        fetch(`${URL}/api/v1/pets/${currentPet.id}`, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+          },
+          body: JSON.stringify({
+            "health": currentPet.health,
+            "happiness": currentPet.happiness,
+            "hungry": false
+          })
+        })
+        // .then(res => res.json())
+        // .then(updatedPet => console.log('fetch sent', updatedPet))
+
+
+      }
+      if(currentPet.hungry === false){
+        console.log("not hungry");
+        currentPet.happiness += 1
+        currentPet.health -= 1
+        currentPetHappiness.innerText = `happiness: ${currentPet.happiness}`
+        currentPetHealth.innerText = `health: ${currentPet.health}`
+        fetch(`${URL}/api/v1/pets/${currentPet.id}`, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+          },
+          body: JSON.stringify({
+            "health": currentPet.health,
+            "happiness": currentPet.happiness
+          })
+        })
+      }
+
+      // if hungry is FALSE
+      // decrement health
+      // increment happiness
     }
     else if(e.target.id === "trainbtn"){
       console.log("trainbtn");
@@ -276,16 +326,6 @@ function init(){
       console.log("sleepbtn");
     }
   })
-
-
-  myPetContainer.addEventListener("click", (e) => {
-    if(e.target.className === "pet" || e.target.tagName === "IMG" || e.target.tagName === "P"){
-      currentPet = currentUser.pets.find(pet => {return pet.id === parseInt(e.target.id)})
-      console.log(currentPet);
-    }
-  })
-
-
 
 
     // delete pet
