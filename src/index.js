@@ -282,11 +282,11 @@ function init(){
             "hungry": false
           })
         })
-        // .then(res => res.json())
-        // .then(updatedPet => console.log('fetch sent', updatedPet))
+      } // end of hungry === true
 
-
-      }
+      // if hungry is FALSE
+      // decrement health
+      // increment happiness
       if(currentPet.hungry === false){
         console.log("not hungry");
         currentPet.happiness += 1
@@ -304,27 +304,77 @@ function init(){
             "happiness": currentPet.happiness
           })
         })
-      }
-
-      // if hungry is FALSE
-      // decrement health
-      // increment happiness
+      } // end of hungry === false
     }
+
     else if(e.target.id === "trainbtn"){
       console.log("trainbtn");
     }
+
     else if(e.target.id === "cleanbtn"){
       console.log("cleanbtn");
+      // if dirty is TRUE
+      // increment health
+      // increment happiness
+      // change dirty boolean to false
+      if(currentPet.dirty === true){
+        // console.log("pet is dirty")
+        currentPet.happiness += 1
+        currentPet.health += 1
+        currentPet.dirty = false
+        // console.log(currentPet);
+        currentPetHappiness.innerText = `happiness: ${currentPet.happiness}`
+        currentPetHealth.innerText = `health: ${currentPet.health}`
+        // console.log('updated the DOM, sending a fetch');
+        fetch(`${URL}/api/v1/pets/${currentPet.id}`, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+          },
+          body: JSON.stringify({
+            "health": currentPet.health,
+            "happiness": currentPet.happiness,
+            "dirty": false
+          })
+        })
+      } // end of dirty === true
+
+      // if dirty is FALSE
+      // increment health
+      // decrement happiness
+      if(currentPet.dirty === false){
+        console.log("not dirty");
+        currentPet.happiness -= 1
+        currentPet.health += 1
+        currentPetHappiness.innerText = `happiness: ${currentPet.happiness}`
+        currentPetHealth.innerText = `health: ${currentPet.health}`
+        fetch(`${URL}/api/v1/pets/${currentPet.id}`, {
+          method: "PATCH",
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+          },
+          body: JSON.stringify({
+            "health": currentPet.health,
+            "happiness": currentPet.happiness
+          })
+        })
+      } // end of hungry === false
     }
+
     else if(e.target.id === "statsbtn"){
       console.log("statsbtn");
     }
+
     else if(e.target.id === "playbtn"){
       console.log("playbtn");
     }
+
     else if(e.target.id === "sleepbtn"){
       console.log("sleepbtn");
     }
+
   })
 
 
