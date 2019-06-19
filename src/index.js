@@ -83,7 +83,7 @@ function init(){
           //   renderPets(petData)
           //   console.log(petData)
           // })
-          
+
         })
       }
       // if user is NOT found in allUsers array
@@ -149,9 +149,9 @@ function init(){
     myPetContainer.innerHTML =
       `<p>Couldn't find any pets, ${currentUser}!!!!</p>
        <p>This is where the CREATE PET form will be.</p>
-       <form>
+       <form id="createPet">
          <input type="text" value="" placeholder="New Pet Name">
-         <button type="submit" name="createPet" id="createPet">create!</button>
+         <button type="submit" name="create" id="create">create!</button>
        </form>
        `
   }

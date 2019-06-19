@@ -70,6 +70,15 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 
+#createPet input[type=text] {
+  width: 50%;
+  padding: 8px;
+  margin: 8px;
+  display: inline-block;
+  border: 1px solid blue;
+  border-radius: 4px;
+}
+
 
 .panel {
   display: flex;
