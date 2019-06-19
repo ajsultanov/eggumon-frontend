@@ -1,6 +1,7 @@
 window.addEventListener("DOMContentLoaded", init)
 
 function init(){
+
   console.log("%c エッグモン", "font-size:24px; font-weight:bold; color:red; text-shadow:2px 2px 2px orange")
 
   const URL = "http://localhost:3000/"
@@ -11,9 +12,6 @@ function init(){
   const fullHealthSRC = `src/img/fullhealth.png`
   const halfHealthSRC = `src/img/halfhealth.png`
   const noHealthSRC = `src/img/nohealth.png`
-
-
-
 
   let logButton = ""
   let currentUser = ""
@@ -165,7 +163,7 @@ function init(){
     return `
         <div class="pet-panel">
         <img src="src/img/${pet.img}" alt="Pet not Pictured">
-        
+
         <span id="panel-button" name="heart">
           <img id="health" src="src/img/fullhealth.png" alt="health">
         </span>
@@ -190,7 +188,21 @@ function init(){
     // "edit" pet (feed, play, etc) buttons
     panelContainer.addEventListener('click', event => {
 
-      if(event.target.id === "toilet" || "burger"){
+      if(event.target.name === "eat" || event.target.id === "burger"){
+
+        if (document.querySelector("#health").getAttribute("src") === fullHealthSRC){
+          console.log("full -> no")
+          document.querySelector("#health").src = noHealthSRC
+        } else if (document.querySelector("#health").getAttribute("src") === noHealthSRC){
+          console.log("no -> half")
+          document.querySelector("#health").src = halfHealthSRC
+        } else {
+          console.log("half -> full")
+          document.querySelector("#health").src = fullHealthSRC
+        }
+      }
+
+      if(event.target.name === "toilet" || event.target.id === "toilet"){
 
         if (document.querySelector("#health").getAttribute("src") === fullHealthSRC){
           console.log("full -> no")
