@@ -17,6 +17,7 @@ function init(){
   let currentUser = ""
   let allPets = []
   let allUsers = []
+  let currentPet = []
 
   function logInButton() {
     userLogin.innerHTML = `
@@ -147,11 +148,11 @@ function init(){
 
   function petConverter(pet) {
     return `
-    <div class="pet">
-      <img src="src/img/egg.png" alt="a speckled egg">
-      <img src="src/img/${pet.img}" alt="Pet not Pictured">
+    <div class="pet" id=${pet.id}>
+      <img src="src/img/egg.png" alt="a speckled egg" id=${pet.id}>
+      <img src="src/img/${pet.img}" alt="Pet not Pictured" id=${pet.id}>
 
-      <p>id: ${pet.id} &nbsp; ~ &nbsp; ${pet.name}</p>
+      <p id=${pet.id}>id: ${pet.id} &nbsp; ~ &nbsp; ${pet.name}</p>
     </div>
     `
         // render data (sprites)
@@ -190,32 +191,44 @@ function init(){
 
       if(event.target.name === "eat" || event.target.id === "burger"){
 
-        if (document.querySelector("#health").getAttribute("src") === fullHealthSRC){
-          console.log("full -> no")
-          document.querySelector("#health").src = noHealthSRC
+        if (document.querySelector("#health").getAttribute("src") === halfHealthSRC){
+          console.log("eat none")
+          document.querySelector("#health").src = fullealthSRC
         } else if (document.querySelector("#health").getAttribute("src") === noHealthSRC){
-          console.log("no -> half")
+          console.log("eat half")
           document.querySelector("#health").src = halfHealthSRC
         } else {
-          console.log("half -> full")
+          console.log("eat full")
           document.querySelector("#health").src = fullHealthSRC
         }
       }
 
       if(event.target.name === "toilet" || event.target.id === "toilet"){
 
-        if (document.querySelector("#health").getAttribute("src") === fullHealthSRC){
-          console.log("full -> no")
-          document.querySelector("#health").src = noHealthSRC
+        if (document.querySelector("#health").getAttribute("src") === halfHealthSRC){
+          console.log("poop none")
+          document.querySelector("#health").src = fullHealthSRC
         } else if (document.querySelector("#health").getAttribute("src") === noHealthSRC){
-          console.log("no -> half")
+          console.log("poop half")
           document.querySelector("#health").src = halfHealthSRC
         } else {
-          console.log("half -> full")
+          console.log("poop full")
           document.querySelector("#health").src = fullHealthSRC
         }
       }
     })
+
+  myPetContainer.addEventListener("click", (e) => {
+    // console.log("click clack");
+    if(e.target.className === "pet" || e.target.tagName === "IMG" || e.target.tagName === "P"){
+      console.log(e.target.id);
+      console.log(currentUser.pets);
+      currentPet = currentUser.pets.find(pet => {return pet.id === parseInt(e.target.id)})
+      console.log(currentPet);
+    }
+  })
+
+
 
     // delete pet
 
