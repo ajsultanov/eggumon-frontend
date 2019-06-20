@@ -24,17 +24,30 @@ h1, h2, h3, h4, h5, h6 {
 .pet {
   border: 2px solid #8099FF;
   border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  max-width: 200px;
+  min-width: 100px;
   padding: 2px;
   margin: 5px;
 }
-.pet p {
-  display: inline;
+.pet p, img {
+  align-self: center;
   margin: 5px;
 }
 .no-pets {
   align-self: flex-start;
 }
 
+#new {
+  display: inline-flex;
+  height: 80px;
+  width: 80px;
+  background-color: rgba(255, 255, 240, 1);
+  border-radius: 5px;
+  justify-content: center;
+  align-items: center;
+}
 .myFormContainer {
   display: none;
   flex-direction: column;

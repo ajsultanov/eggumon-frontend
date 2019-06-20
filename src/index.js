@@ -9,6 +9,7 @@ function init(){
   const myPetTitle = document.getElementById("my-pets-title")
   const myFormContainer = document.getElementById("my-pets-form")
   const myPetContainer = document.getElementById("my-pets")
+  const formBtn = document.getElementById("new")
 
   const incrementpetContainer = document.getElementById("incrementpet")
   const foodBtn = document.getElementById("foodbtn")
@@ -107,6 +108,7 @@ function init(){
       <input type="text" name="login" id="login" value="" placeholder="Username">
     `
     logButton = userLogin.getElementsByTagName('BUTTON')[0]
+    myFormContainer.style.display = "none"
   }
   logInButton()
 
@@ -124,7 +126,9 @@ function init(){
         let petHTML = petConverter(p)
         myPetContainer.innerHTML += petHTML
       })
-      //render button to show edit form
+      if (pets.length < 3){
+        myPetContainer.innerHTML += `<span class="pet" id="new">new pet</span>`
+      }
     }
     else {
       noPets()
@@ -148,10 +152,15 @@ function init(){
 
     form.addEventListener("submit", event => {
       event.preventDefault()
+
       let name = input.value
-      let specialty = select.value
+      let specialty = "HOCKEY"
 
       if (name !== "" && specialty !== "") {
+        myFormContainer.style.display = "none"
+
+        form.reset()
+
         fetch(`${URL}pets`, {
           method: "POST",
           headers: {
@@ -165,10 +174,17 @@ function init(){
           })
         })
         .then(r => r.json())
-        .then(console.log)
-      } else if (!myFormContainer.contains(p)) {
+        .then(petData => {
+          fetch(`${URL}users/${currentUser.id}`)
+          .then(r => r.json()).then(r => {
+            currentUser = r
+            renderPets(currentUser.pets)
+          })
+        })
+      }
+      else if (!myFormContainer.contains(p)) {
         myFormContainer.innerHTML += "<p>Please complete the above form</p>"
-        newForm()
+        form.reset()
       }
     })
   }
@@ -176,7 +192,7 @@ function init(){
   function petConverter(pet) {
     return `
     <span class="pet" id=${pet.id}>
-      <img src="src/img/${pet.img}">
+      <img src="./src/img/${pet.img}">
 
       <p>${pet.name}</p>
     </span>
@@ -205,7 +221,12 @@ function init(){
     } else if (e.target.tagName === "IMG" || e.target.tagName === "P") {
       target = e.target.parentNode
     }
-    if (target !== "") {
+    console.log(target)
+
+      if (target.id === "new") {
+        newForm()
+      }
+      else if (target !== "" && target.className !== "pet-container") {
       currentPet = currentUser.pets.find(pet => {return pet.id === parseInt(target.id)})
       // current pet is the clicked on pet
       // then populate the pet's stats in the stat box below
