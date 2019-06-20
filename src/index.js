@@ -7,6 +7,7 @@ function init(){
   const URL = "http://localhost:3000/api/v1/"
   const userLogin = document.getElementById("user")
   const myPetContainer = document.getElementById("my-pets")
+  const myPetTitle = document.getElementById("my-pets-title")
 
   const incrementpetContainer = document.getElementById("incrementpet")
   const foodBtn = document.getElementById("foodbtn")
@@ -62,6 +63,9 @@ function init(){
 
           console.log("current user pets:", currentUser.pets)
           renderPets(currentUser.pets)
+
+          incrementpetContainer.style.display = "inline-grid"
+          currentpetstatusContainer.style.display = "inline-flex"
         })
       }
       // if user is NOT found in allUsers array -> create
@@ -111,6 +115,7 @@ function init(){
 
   function renderPets(pets) {
     myPetContainer.innerHTML = ""
+    myPetTitle.innerText = "My Pets"
     if (pets.length > 0) {
       pets.forEach(p => {
         let petHTML = petConverter(p)
@@ -163,12 +168,11 @@ function init(){
 
   function petConverter(pet) {
     return `
-    <div class="pet" id=${pet.id}>
-      <img src="src/img/egg.png" alt="a speckled egg" id=${pet.id}>
-      <img src="src/img/${pet.img}" alt="Pet not Pictured" id=${pet.id}>
+    <span class="pet" id=${pet.id}>
+      <img src="src/img/${pet.img}">
 
-      <p id=${pet.id}>id: ${pet.id} &nbsp; ~ &nbsp; ${pet.name}</p>
-    </div>
+      <p>${pet.name}</p>
+    </span>
     `
   }
 
@@ -188,12 +192,16 @@ function init(){
 
   myPetContainer.addEventListener("click", (e) => {
     // this function just finds and sets the current pet when a user clicks on a pet in the all pets container
-    if(e.target.className === "pet" || e.target.tagName === "IMG" || e.target.tagName === "P"){
-      currentPet = currentUser.pets.find(pet => {return pet.id === parseInt(e.target.id)})
-      // console.log(currentPet);
+    let target = ""
+    if (e.target.tagName === "SPAN") {
+      target = e.target
+    } else if (e.target.tagName === "IMG" || e.target.tagName === "P") {
+      target = e.target.parentNode
+    }
+    if (target !== "") {
+      currentPet = currentUser.pets.find(pet => {return pet.id === parseInt(target.id)})
       // current pet is the clicked on pet
       // then populate the pet's stats in the stat box below
-      // debugger
       renderCurrentPetStatus(currentPet)
     }
   })

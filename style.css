@@ -14,15 +14,17 @@ h1, h2, h3, h4, h5, h6 {
 
 .pet-container {
   border: 2px solid red;
+  border-radius: 10px;
   padding: 5px;
   margin: 10px;
-}
-.pet-container p {
-  font-family: Georgia, serif;
+  display: flex;
+  align-content: center;
+  justify-content: center;
 }
 
 .pet {
   border: 2px solid #8099FF;
+  border-radius: 5px;
   padding: 2px;
   margin: 5px;
 }
@@ -30,45 +32,6 @@ h1, h2, h3, h4, h5, h6 {
   display: inline;
   margin: 5px;
 }
-
-.egg {
-  padding: 8px;
-  border-radius: 12px;
-  box-shadow: 0 4px 2px #8099FF;
-}
-
-.pet-panel
-{
-
-     margin: 0 auto;
-     width: 100px;
-}
-
-.btn-group button {
-  background-color: rgb(20, 204, 236); /* Green background */
-  border: 1px solid rgb(5, 42, 206); /* Green border */
-  color: white; /* White text */
-  padding: 10px 24px; /* Some padding */
-  cursor: pointer; /* Pointer/hand icon */
-  float: left; /* Float the buttons side by side */
-}
-
-/* Clear floats (clearfix hack) */
-.btn-group:after {
-  content: "";
-  clear: both;
-  display: table;
-}
-
-.btn-group button:not(:last-child) {
-  border-right: none; /* Prevent double borders */
-}
-
-/* Add a background color on hover */
-.btn-group button:hover {
-  background-color: #ececec;
-}
-
 
 #createPet input[type=text] {
   width: 40%;
@@ -104,12 +67,10 @@ h1, h2, h3, h4, h5, h6 {
 .panel {
   display: flex;
   flex-direction: row;
-  background-color: white;
   justify-content: space-around;
   align-items: center;
 }
 .grid-container {
-  display: inline-grid;
   grid-template-columns: 50px 50px 50px;
   grid-template-rows: 50px 50px 50px;
   grid-gap: 10px;
@@ -118,6 +79,7 @@ h1, h2, h3, h4, h5, h6 {
   margin: 10px;
   padding: 10px;
   text-align: center;
+  display: none;
 }
 .grid-item {
   border-radius: 10px;
@@ -129,9 +91,9 @@ h1, h2, h3, h4, h5, h6 {
   grid-column-end: 3;
   grid-row-start: 2;
   grid-row-end: 2;
-  border: 2px solid red;
+  border: 2px solid green;
   border-radius: 5px;
-  background-color: lightgreen;
+  background-color: rgba(144, 238, 144, .25);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -141,9 +103,9 @@ h1, h2, h3, h4, h5, h6 {
   grid-column-end: 3;
   grid-row-start: 2;
   grid-row-end: 2;
-  border: 2px dotted black;
+  border: 2px dashed gray;
   border-radius: 5px;
-  background-color: lightgreen;
+  background-color: rgba(144, 238, 144, .25);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -155,7 +117,7 @@ h1, h2, h3, h4, h5, h6 {
 .flex-container {
   height: 190px;
   width: 190px;
-  display: inline-flex;
+  display: none;
   flex-direction: column;
   justify-content: center;
   border: 2px solid blue;
@@ -167,5 +129,5 @@ h1, h2, h3, h4, h5, h6 {
   padding: 0px;
 }
 .flex-item {
-  background-color: lavender;
+  background-color: rgba(238, 144, 238, .25);
 }
