@@ -7,11 +7,6 @@ function init(){
   const URL = "http://localhost:3000/api/v1/"
   const userLogin = document.getElementById("user")
   const myPetContainer = document.getElementById("my-pets")
-  const otherPetContainer = document.getElementById("other-pets")
-  const panelContainer = document.getElementById("pet-control-panel")
-  const fullHealthSRC = `src/img/fullhealth.png`
-  const halfHealthSRC = `src/img/halfhealth.png`
-  const noHealthSRC = `src/img/nohealth.png`
 
   const incrementpetContainer = document.getElementById("incrementpet")
   const foodBtn = document.getElementById("foodbtn")
@@ -37,15 +32,6 @@ function init(){
   let allUsers = []
   let currentPet = []
 
-  function logInButton() {
-    userLogin.innerHTML = `
-      <button type="submit" data-action="login">Sign Up / Sign In</button>
-      <input type="text" name="login" id="login" value="" placeholder="Username">
-    `
-    logButton = userLogin.getElementsByTagName('BUTTON')[0]
-  }
-  logInButton()
-
   // get all users
   fetch(`${URL}users`).then(r => r.json()).then(userData => {
     userData.forEach(user => {
@@ -59,11 +45,11 @@ function init(){
   userLogin.addEventListener("submit", event => {
     event.preventDefault()
 
-    // user is not logged in
+    // user is NOT logged in -> log in
     if (logButton.dataset.action === "login") {
     const userInput = userLogin.elements.login.value
 
-      // if user IS found in allUsers array
+      // if user IS found in allUsers array -> sign in
       if (allUsers.some(user => user.name === userInput)) {
         currentUser = allUsers.find(user => user.name === userInput)
         console.log("current user:", currentUser)
@@ -78,7 +64,7 @@ function init(){
           renderPets(currentUser.pets)
         })
       }
-      // if user is NOT found in allUsers array
+      // if user is NOT found in allUsers array -> create
       else {
         fetch(`${URL}users`, {
           method: "POST",
@@ -100,14 +86,22 @@ function init(){
         })
       }
     }
-    // user is logged in
+    // if user is logged in -> log out
     if (logButton.dataset.action === "logout") {
       currentUser = ""
       myPetContainer.innerHTML = "<p>my pets container splash image</p>"
-      panelContainer.innerHTML = ""
       logInButton()
     }
   })
+
+  function logInButton() {
+    userLogin.innerHTML = `
+      <button type="submit" data-action="login">Sign Up / Sign In</button>
+      <input type="text" name="login" id="login" value="" placeholder="Username">
+    `
+    logButton = userLogin.getElementsByTagName('BUTTON')[0]
+  }
+  logInButton()
 
   function logOutButton() {
     userLogin.innerHTML =
@@ -117,26 +111,19 @@ function init(){
 
   function renderPets(pets) {
     myPetContainer.innerHTML = ""
-    panelContainer.innerHTML = ""
     if (pets.length > 0) {
       pets.forEach(p => {
         let petHTML = petConverter(p)
         myPetContainer.innerHTML += petHTML
-        //render pet control panel html here
-        let controlHTML = renderControlPanel(p)
-        panelContainer.innerHTML += controlHTML
 
       })
     }
     else {
       noPets()
     }
-    // generate 3 random numbers from 1 - total # of pets
-    // render those pets here
-    // this could be moved outside the renderPets
-    // function if it should happen automatically
   }
 
+  // if no pets found -> create pet form
   function noPets() {
     myPetContainer.innerHTML = `
        <p>Couldn't find any pets, ${currentUser.name}!! Why not make one...</p>
@@ -183,8 +170,6 @@ function init(){
       <p id=${pet.id}>id: ${pet.id} &nbsp; ~ &nbsp; ${pet.name}</p>
     </div>
     `
-        // render data (sprites)
-        // render data (info)
   }
 
   function renderCurrentPetStatus(pet){
@@ -195,70 +180,11 @@ function init(){
     currentPetWeight.innerText = `weight: ${pet.weight}`
     currentPetSpecialty.innerText = `specialty: ${pet.specialty}`
     currentPetHealth.innerText = `health: ${pet.health}`
-    currentPetHappiness.innerText = `health: ${pet.health}`
+    currentPetHappiness.innerText = `happiness: ${pet.happiness}`
     currentPetSkills.innerText = `skill points: ${pet.skill_points}`
-    currentUserName.innerText = `user: ${currentUser.name}`
+    currentUserName.innerText = `owner: ${currentUser.name}`
 
   }
-
-  function renderControlPanel(pet){
-    console.log("petcontrolpanel")
-    return `
-        <div class="pet-panel">
-        <img src="src/img/${pet.img}" alt="Pet not Pictured">
-
-        <span id="panel-button" name="heart">
-          <img id="health" src="src/img/fullhealth.png" alt="health">
-        </span>
-        </div>
-
-
-        <div id="btn-group" class="btn-group">
-          <button id="panel-button" name="eat">
-          <img id="burger" src="src/img/burger.png" alt="feed">
-          </button>
-          <button id="panel-button" name="toilet">
-          <img id="toilet" src="src/img/toilet-paper.png" alt="toilet">
-          </button>
-
-        </div>
-
-    `
-  }
-
-  // listen for clicks on:
-    // create new pet form
-    // "edit" pet (feed, play, etc) buttons
-    panelContainer.addEventListener('click', event => {
-
-      if(event.target.name === "eat" || event.target.id === "burger"){
-
-        if (document.querySelector("#health").getAttribute("src") === halfHealthSRC){
-          console.log("eat none")
-          document.querySelector("#health").src = fullealthSRC
-        } else if (document.querySelector("#health").getAttribute("src") === noHealthSRC){
-          console.log("eat half")
-          document.querySelector("#health").src = halfHealthSRC
-        } else {
-          console.log("eat full")
-          document.querySelector("#health").src = fullHealthSRC
-        }
-      }
-
-      if(event.target.name === "toilet" || event.target.id === "toilet"){
-
-        if (document.querySelector("#health").getAttribute("src") === halfHealthSRC){
-          console.log("poop none")
-          document.querySelector("#health").src = fullHealthSRC
-        } else if (document.querySelector("#health").getAttribute("src") === noHealthSRC){
-          console.log("poop half")
-          document.querySelector("#health").src = halfHealthSRC
-        } else {
-          console.log("poop full")
-          document.querySelector("#health").src = fullHealthSRC
-        }
-      }
-    })
 
   myPetContainer.addEventListener("click", (e) => {
     // this function just finds and sets the current pet when a user clicks on a pet in the all pets container
@@ -274,8 +200,16 @@ function init(){
 
   incrementpet.addEventListener("click", (e) => {
     // console.log("incrementing stuff");
-    if(e.target.id === "foodbtn"){
-      // console.log("pushing food btn");
+
+    let target = ""
+    if (e.target.tagName === "BUTTON") {
+      target = e.target
+    } else if (e.target.tagName === "IMG") {
+      target = e.target.parentNode
+    }
+
+    if(target.id === "foodbtn"){
+      console.log("foodbtn");
 
       // if hungry is TRUE
       // hungry boolean needs to change to false
@@ -290,7 +224,7 @@ function init(){
         currentPetHappiness.innerText = `happiness: ${currentPet.happiness}`
         currentPetHealth.innerText = `health: ${currentPet.health}`
         // console.log('updated the DOM, sending a fetch');
-        fetch(`${URL}/api/v1/pets/${currentPet.id}`, {
+        fetch(`${URL}pets/${currentPet.id}`, {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
@@ -313,7 +247,7 @@ function init(){
         currentPet.health -= 1
         currentPetHappiness.innerText = `happiness: ${currentPet.happiness}`
         currentPetHealth.innerText = `health: ${currentPet.health}`
-        fetch(`${URL}/api/v1/pets/${currentPet.id}`, {
+        fetch(`${URL}pets/${currentPet.id}`, {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
@@ -327,11 +261,11 @@ function init(){
       } // end of hungry === false
     }
 
-    else if(e.target.id === "trainbtn"){
+    if(target.id === "trainbtn"){
       console.log("trainbtn");
     }
 
-    else if(e.target.id === "cleanbtn"){
+    if(target.id === "cleanbtn"){
       console.log("cleanbtn");
       // if dirty is TRUE
       // increment health
@@ -346,7 +280,7 @@ function init(){
         currentPetHappiness.innerText = `happiness: ${currentPet.happiness}`
         currentPetHealth.innerText = `health: ${currentPet.health}`
         // console.log('updated the DOM, sending a fetch');
-        fetch(`${URL}/api/v1/pets/${currentPet.id}`, {
+        fetch(`${URL}pets/${currentPet.id}`, {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
@@ -369,7 +303,7 @@ function init(){
         currentPet.health += 1
         currentPetHappiness.innerText = `happiness: ${currentPet.happiness}`
         currentPetHealth.innerText = `health: ${currentPet.health}`
-        fetch(`${URL}/api/v1/pets/${currentPet.id}`, {
+        fetch(`${URL}pets/${currentPet.id}`, {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
@@ -383,15 +317,15 @@ function init(){
       } // end of hungry === false
     }
 
-    else if(e.target.id === "statsbtn"){
+    if(target.id === "statsbtn"){
       console.log("statsbtn");
     }
 
-    else if(e.target.id === "playbtn"){
+    if(target.id === "playbtn"){
       console.log("playbtn");
     }
 
-    else if(e.target.id === "sleepbtn"){
+    if(target.id === "sleepbtn"){
       console.log("sleepbtn");
     }
 
