@@ -21,7 +21,6 @@ h1, h2, h3, h4, h5, h6 {
   align-content: center;
   justify-content: center;
 }
-
 .pet {
   border: 2px solid #8099FF;
   border-radius: 5px;
@@ -32,10 +31,23 @@ h1, h2, h3, h4, h5, h6 {
   display: inline;
   margin: 5px;
 }
+.no-pets {
+  align-self: flex-start;
+}
 
+.myFormContainer {
+  display: none;
+  flex-direction: column;
+}
+.myFormContainer form {
+  display: inline-flex;
+  width: 100%;
+  background-color: rgba(255, 255, 0, .5);
+  border-radius: 10px;
+}
 #createPet input[type=text] {
   width: 40%;
-  padding: 4px;
+  padding: 2px;
   margin: 8px 4px 8px 8px;
   display: inline-block;
   border: 1px solid blue;
@@ -44,20 +56,20 @@ h1, h2, h3, h4, h5, h6 {
 #createPet select {
   width: 20%;
   height: 25px;
-  background-color: #8AF;
-  padding: 4px;
+  background-color: #CCF;
+  padding: 2px;
   margin: 8px 4px;
   display: inline-block;
   border: 1px solid blue;
   border-radius: 4px;
 }
 #createPet button[type=submit] {
-  width: 20%;
-  height: 25px;
+  width: 50%;
+  height: 23px;
   background-color: #68A;
   color: white;
-  padding: 8px;
-  margin: 8px 4px;
+  padding: 2px;
+  margin: 8px 8px 8px 4px;
   border: none;
   border-radius: 4px;
   box-shadow: 0px 2px 2px black;

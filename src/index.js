@@ -6,8 +6,9 @@ function init(){
 
   const URL = "http://localhost:3000/api/v1/"
   const userLogin = document.getElementById("user")
-  const myPetContainer = document.getElementById("my-pets")
   const myPetTitle = document.getElementById("my-pets-title")
+  const myFormContainer = document.getElementById("my-pets-form")
+  const myPetContainer = document.getElementById("my-pets")
 
   const incrementpetContainer = document.getElementById("incrementpet")
   const foodBtn = document.getElementById("foodbtn")
@@ -38,7 +39,7 @@ function init(){
     userData.forEach(user => {
       allUsers.push(user)
     })
-    console.log(allUsers)
+    console.log(allUsers.map(user => user.name))
   })
 
   // initialize page
@@ -120,8 +121,8 @@ function init(){
       pets.forEach(p => {
         let petHTML = petConverter(p)
         myPetContainer.innerHTML += petHTML
-
       })
+      //render button to show edit form
     }
     else {
       noPets()
@@ -131,38 +132,41 @@ function init(){
   // if no pets found -> create pet form
   function noPets() {
     myPetContainer.innerHTML = `
-       <p>Couldn't find any pets, ${currentUser.name}!! Why not make one...</p>
-       <form id="createPet">
-         <input type="text" value="" placeholder="New Pet Name" id="pet-name">
-         <select name="specialty" id="special-select">
-          <option value="archery">archery</option>
-          <option value="baseball">baseball</option>
-          <option value="chiropractics">chiropractics</option>
-          <option value="judo">judo</option>
-        </select>
-         <button type="submit" name="create">create!</button>
-       </form>
+       <p class="no-pets">Couldn't find any pets, ${currentUser.name}!! Why not make one... &#x2191;&#x2191;&#x2191;</p>
        `
+    newForm()
+  }
+
+  function newForm() {
+    myFormContainer.style.display = "flex"
     const form = document.getElementById("createPet")
     const input = document.getElementById("pet-name")
     const select = document.getElementById("special-select")
+    const p = myFormContainer.getElementsByTagName("P")[0]
+
     form.addEventListener("submit", event => {
       event.preventDefault()
       let name = input.value
       let specialty = select.value
 
-      fetch(`${URL}pets`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Accept": "application/json"
-        },
-        body: JSON.stringify({
-          name: name,
-          specialty: specialty
+      if (name !== "" && specialty !== "") {
+        fetch(`${URL}pets`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Accept": "application/json"
+          },
+          body: JSON.stringify({
+            name: name,
+            specialty: specialty
+          })
         })
-      })
-      .then(console.log)
+        .then(r => r.json())
+        .then(console.log)
+      } else if (!myFormContainer.contains(p)) {
+        myFormContainer.innerHTML += "<p>Please complete the above form</p>"
+        newForm()
+      }
     })
   }
 
