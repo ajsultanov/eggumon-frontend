@@ -4,7 +4,7 @@ function init(){
 
   console.log("%c エッグモン", "font-size:24px; font-weight:bold; color:red; text-shadow:2px 2px 2px orange")
 
-  const URL = "http://localhost:3000/"
+  const URL = "http://localhost:3000/api/v1/"
   const userLogin = document.getElementById("user")
   const myPetContainer = document.getElementById("my-pets")
   const otherPetContainer = document.getElementById("other-pets")
@@ -47,7 +47,7 @@ function init(){
   logInButton()
 
   // get all users
-  fetch(`${URL}api/v1/users`).then(r => r.json()).then(userData => {
+  fetch(`${URL}users`).then(r => r.json()).then(userData => {
     userData.forEach(user => {
       allUsers.push(user)
     })
@@ -68,7 +68,7 @@ function init(){
         currentUser = allUsers.find(user => user.name === userInput)
         console.log("current user:", currentUser)
 
-        fetch(`${URL}api/v1/users/${currentUser.id}`)
+        fetch(`${URL}users/${currentUser.id}`)
         .then(r => r.json())
         .then(userData => {
 
@@ -76,19 +76,11 @@ function init(){
 
           console.log("current user pets:", currentUser.pets)
           renderPets(currentUser.pets)
-
-          // fetch(`${URL}api/v1/pets?user_id=${currentUser}`)
-          // .then(r => r.json())
-          // .then(petData => {
-          //   renderPets(petData)
-          //   console.log(petData)
-          // })
-
         })
       }
       // if user is NOT found in allUsers array
       else {
-        fetch(`${URL}api/v1/users`, {
+        fetch(`${URL}users`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -146,14 +138,40 @@ function init(){
   }
 
   function noPets() {
-    myPetContainer.innerHTML =
-      `<p>Couldn't find any pets, ${currentUser}!!!!</p>
-       <p>This is where the CREATE PET form will be.</p>
+    myPetContainer.innerHTML = `
+       <p>Couldn't find any pets, ${currentUser.name}!! Why not make one...</p>
        <form id="createPet">
-         <input type="text" value="" placeholder="New Pet Name">
-         <button type="submit" name="create" id="create">create!</button>
+         <input type="text" value="" placeholder="New Pet Name" id="pet-name">
+         <select name="specialty" id="special-select">
+          <option value="archery">archery</option>
+          <option value="baseball">baseball</option>
+          <option value="chiropractics">chiropractics</option>
+          <option value="judo">judo</option>
+        </select>
+         <button type="submit" name="create">create!</button>
        </form>
        `
+    const form = document.getElementById("createPet")
+    const input = document.getElementById("pet-name")
+    const select = document.getElementById("special-select")
+    form.addEventListener("submit", event => {
+      event.preventDefault()
+      let name = input.value
+      let specialty = select.value
+
+      fetch(`${URL}pets`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        },
+        body: JSON.stringify({
+          name: name,
+          specialty: specialty
+        })
+      })
+      .then(console.log)
+    })
   }
 
   function petConverter(pet) {
@@ -177,7 +195,7 @@ function init(){
     <p class="flex-item" id="currentPetWeight">weight: ${pet.weight}</p>
     <p class="flex-item" id="currentPetSpecialty">specialty: ${pet.specialty}</p>
     <p class="flex-item" id="currentPetHealth">health: ${pet.health}
-      <img src="./src/img/heart16_full.png" alt="" style="background-color:black;">
+      <img src="./src/img/heart16_full.png" alt="">
       <img src="./src/img/heart16_full.png" alt="">
       <img src="./src/img/heart16_full.png" alt="">
     </p>
