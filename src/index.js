@@ -75,7 +75,7 @@ function init(){
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Accept: "application/json"
+            "Accept": "application/json"
           },
           body: JSON.stringify({
             name: userInput
@@ -94,7 +94,9 @@ function init(){
     // if user is logged in -> log out
     if (logButton.dataset.action === "logout") {
       currentUser = ""
-      myPetContainer.innerHTML = "<p>my pets container splash image</p>"
+      myPetContainer.innerHTML = `<img src="./src/img/splash.png" alt="">`
+      incrementpetContainer.style.display = "none"
+      currentpetstatusContainer.style.display = "none"
       logInButton()
     }
   })
@@ -158,7 +160,8 @@ function init(){
           },
           body: JSON.stringify({
             name: name,
-            specialty: specialty
+            specialty: specialty,
+            user: currentUser.id
           })
         })
         .then(r => r.json())
