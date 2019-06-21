@@ -57,7 +57,7 @@ function init(){
       // if user IS found in allUsers array -> sign in
       if (allUsers.some(user => user.name === userInput)) {
         currentUser = allUsers.find(user => user.name === userInput)
-        console.log("current user:", currentUser)
+        //console.log("current user:", currentUser)
 
         fetch(`${URL}users/${currentUser.id}`)
         .then(r => r.json())
@@ -65,7 +65,7 @@ function init(){
 
           logOutButton()
 
-          console.log("current user pets:", currentUser.pets)
+          //console.log("current user pets:", currentUser.pets)
           renderPets(currentUser.pets)
 
           incrementpetContainer.style.display = "inline-grid"
@@ -86,7 +86,7 @@ function init(){
         })
         .then(r => r.json())
         .then(userData => {
-          console.log("current user:", userData)
+          //console.log("current user:", userData)
           currentUser = userData
           allUsers.push(userData)
           renderPets(userData.pets)
@@ -97,7 +97,11 @@ function init(){
     // if user is logged in -> log out
     if (logButton.dataset.action === "logout") {
       currentUser = ""
-      myPetContainer.innerHTML = `<img src="./src/img/splash.png" alt="">`
+      myPetContainer.innerHTML = `
+      <img src="./src/img/good.png" alt="">
+      <img src="./src/img/splash.png" alt="">
+      <img src="./src/img/bye.png" alt="">
+      `
       incrementpetContainer.style.display = "none"
       currentpetstatusContainer.style.display = "none"
       logInButton()
@@ -111,6 +115,7 @@ function init(){
     `
     logButton = userLogin.getElementsByTagName('BUTTON')[0]
     myFormContainer.style.display = "none"
+    sprite.innerHTML = `<img src="" alt="">`
   }
   logInButton()
 
@@ -156,7 +161,7 @@ function init(){
       event.preventDefault()
 
       let name = input.value
-      let specialty = "HOCKEY"
+      let specialty = "mango"
 
       if (name !== "" && specialty !== "") {
         myFormContainer.style.display = "none"
@@ -195,12 +200,21 @@ function init(){
   }
 
   function petConverter(pet) {
-    return `
-    <span class="pet" id=${pet.id}>
-      <img src="./src/img/${pet.img}">
-      <p>${pet.name}</p>
-    </span>
-    `
+    if (pet.health > 0 && pet.happiness > 0) {
+      return `
+      <span class="pet" id=${pet.id}>
+        <img src="./src/img/${pet.img}">
+        <p>${pet.name}</p>
+      </span>
+      `
+    } else {
+      return `
+      <span class="kaput">
+        <img src="./src/img/grave.png">
+        <p>&#10013; ${pet.name}</p>
+      </span>
+      `
+    }
   }
 
   function renderCurrentPetStatus(pet){
@@ -210,20 +224,32 @@ function init(){
     currentPetAge.innerText = `age: ${pet.age}`
     currentPetWeight.innerText = `weight: ${pet.weight}`
     currentPetSpecialty.innerText = `specialty: ${pet.specialty}`
-    currentPetHealth.innerText = `health: ${pet.health}`
-    currentPetHappiness.innerText = `happiness: ${pet.happiness}`
+    currentPetHealth.innerHTML = "health: "
+    for (let i = 0; i < currentPet.health; i++) {
+      currentPetHealth.innerHTML += `<img src="./src/img/heart16_full.png">`
+    }
+    currentPetHappiness.innerText = "happiness: "
+    for (let i = 0; i < currentPet.happiness; i++) {
+      currentPetHappiness.innerHTML += `<img src="./src/img/happyface.png">`
+    }
     currentPetSkills.innerText = `skill points: ${pet.skill_points}`
     currentUserName.innerText = `owner: ${currentUser.name}`
   }
 
   myPetContainer.addEventListener("click", (e) => {
     // this function just finds and sets the current pet when a user clicks on a pet in the all pets container
+
     let target = ""
     if (e.target.tagName === "SPAN") {
       target = e.target
     } else if (e.target.tagName === "IMG" || e.target.tagName === "P") {
       target = e.target.parentNode
     }
+
+      if (target.className === "kaput") {
+        console.log("%c☹", "font-size:72pt;")
+        return ""
+      }
 
       if (target.id === "new") {
         newForm()
@@ -244,30 +270,32 @@ function init(){
     }
     else if (currentPet.hungry === true) {
       status.innerHTML = `<img src="./src/img/hungry.png" alt="">`
-      console.log("in hungry statement")
+      //console.log("in hungry statement")
       //window.setTimeout(() => {
-        console.log(currentPet.health)
+        //console.log(currentPet.health)
       //}, 2000)
     } else {
       status.innerHTML = `<img src="" alt="">`
     }
 
     if (currentPet.age === "egg") {
-      console.log("EGGGGG!")
+      //console.log("EGGGGG!")
       mutate(currentPet)
     }
 
     if (currentPet.dirty === false) {
         //window.setTimeout(() => {
-        console.log("clean him up")
+        //console.log("clean him up")
       //}, 2000)
     }
   }
 
   function mutate(pet) {
+    currentPet.skill_points = 0
+
     const babies = ["1a.gif", "1b.gif", "1c.gif"]
     const teens = ["2a.gif", "2b.gif", "2c.gif", "2d.gif", "2e.gif", "2f.gif"]
-    const adults = ["3a.png", "3b.png", "3c.png", "3d.png", "3e.png", "3f.png", "3g.png", "3h.png", "3i.png",]
+    const adults = ["3a.gif", "3b.gif", "3c.gif", "3d.gif", "3e.gif", "3f.gif", "3g.gif", "3h.gif", "3i.gif",]
     let i = 0
 
     switch (pet.age) {
@@ -286,7 +314,7 @@ function init(){
       case "teen":
         pet.age = "adult"
         pet.weight++
-        i = Math.floor(Math.random() * Math.floor(6))
+        i = Math.floor(Math.random() * Math.floor(9))
         pet.img = adults[i]
         break
     }
@@ -300,10 +328,12 @@ function init(){
       body: JSON.stringify({
         "age": pet.age,
         "weight": pet.weight,
-        "img": pet.img
+        "img": pet.img,
+        "skill_points": pet.skill_points
       })
     }).then(() => {
       renderIncrementPet()
+      renderCurrentPetStatus(pet)
       renderPets(currentUser.pets)
     })
   }
@@ -319,7 +349,7 @@ function init(){
     }
 
     if(target.id === "foodbtn"){
-      console.log("foodbtn");
+      //console.log("foodbtn");
 
       // if hungry is TRUE
       // hungry boolean needs to change to false
@@ -336,9 +366,16 @@ function init(){
           currentPet.health += 1
         }
         currentPet.hungry = false
+        console.log("yum yum")
         // console.log(currentPet);
-        currentPetHappiness.innerText = `happiness: ${currentPet.happiness}`
-        currentPetHealth.innerText = `health: ${currentPet.health}`
+        currentPetHappiness.innerText = "happiness: "
+        for (let i = 0; i < currentPet.happiness; i++) {
+          currentPetHappiness.innerHTML += `<img src="./src/img/happyface.png">`
+        }
+        currentPetHealth.innerHTML = "health: "
+        for (let i = 0; i < currentPet.health; i++) {
+          currentPetHealth.innerHTML += `<img src="./src/img/heart16_full.png">`
+        }
         // console.log('updated the DOM, sending a fetch');
         fetch(`${URL}pets/${currentPet.id}`, {
           method: "PATCH",
@@ -354,7 +391,7 @@ function init(){
         })
         .then(r => r.json())
         .then(r => {
-          console.log(r)
+          //console.log(r)
           currentPet.dirty = true
           renderIncrementPet()
           renderCurrentPetStatus(currentPet)
@@ -364,7 +401,7 @@ function init(){
       // if hungry is FALSE
       // decrement health
       // increment happiness
-      if(currentPet.hungry === false) {
+      else if(currentPet.hungry === false) {
         console.log("not hungry");
         if (currentPet.happiness < 5) {
           currentPet.happiness += 1
@@ -373,7 +410,10 @@ function init(){
           currentPet.health -= 1
         }
         currentPetHappiness.innerText = `happiness: ${currentPet.happiness}`
-        currentPetHealth.innerText = `health: ${currentPet.health}`
+        currentPetHealth.innerHTML = "health: "
+        for (let i = 0; i < currentPet.health; i++) {
+          currentPetHealth.innerHTML += `<img src="./src/img/heart16_full.png">`
+        }
         fetch(`${URL}pets/${currentPet.id}`, {
           method: "PATCH",
           headers: {
@@ -389,14 +429,17 @@ function init(){
     }
 
     if(target.id === "trainbtn"){
-      console.log("trainbtn");
+      //console.log("trainbtn");
       currentPet.hungry = true
+      if (currentPet.skill_points < 5) {
+        currentPet.skill_points += 1
+      }
       renderIncrementPet()
       renderCurrentPetStatus(currentPet)
     }
 
     if(target.id === "cleanbtn"){
-      console.log("cleanbtn");
+      //console.log("cleanbtn");
       // if dirty is TRUE
       // increment health
       // increment happiness
@@ -412,7 +455,10 @@ function init(){
         currentPet.dirty = false
         // console.log(currentPet);
         currentPetHappiness.innerText = `happiness: ${currentPet.happiness}`
-        currentPetHealth.innerText = `health: ${currentPet.health}`
+        currentPetHealth.innerHTML = "health: "
+        for (let i = 0; i < currentPet.health; i++) {
+          currentPetHealth.innerHTML += `<img src="./src/img/heart16_full.png">`
+        }
         // console.log('updated the DOM, sending a fetch');
         fetch(`${URL}pets/${currentPet.id}`, {
           method: "PATCH",
@@ -434,7 +480,7 @@ function init(){
       // if dirty is FALSE
       // increment health
       // decrement happiness
-      if(currentPet.dirty === false){
+      else if(currentPet.dirty === false){
         console.log("not dirty");
         if (currentPet.happiness > 0) {
           currentPet.happiness -= 1
@@ -443,7 +489,10 @@ function init(){
           currentPet.health += 1
         }
         currentPetHappiness.innerText = `happiness: ${currentPet.happiness}`
-        currentPetHealth.innerText = `health: ${currentPet.health}`
+        currentPetHealth.innerHTML = "health: "
+        for (let i = 0; i < currentPet.health; i++) {
+          currentPetHealth.innerHTML += `<img src="./src/img/heart16_full.png">`
+        }
         fetch(`${URL}pets/${currentPet.id}`, {
           method: "PATCH",
           headers: {
@@ -459,12 +508,14 @@ function init(){
     }
 
     if(target.id === "statsbtn"){
-      console.log("statsbtn");
-      mutate(currentPet)
+      //console.log("statsbtn");
+      if (currentPet.skill_points >= 5) {
+        mutate(currentPet)
+      }
     }
 
     if(target.id === "playbtn"){
-      console.log("playbtn");
+      //console.log("playbtn");
       if (currentPet.happiness < 5) {
         currentPet.happiness += 1
       }
@@ -474,12 +525,33 @@ function init(){
     }
 
     if(target.id === "sleepbtn"){
-      console.log("sleepbtn");
+      //console.log("sleepbtn");
+      if (currentPet.happiness > 0) {
+        currentPet.happiness -= 1
+      }
+      renderIncrementPet()
+      renderCurrentPetStatus(currentPet)
+
+      fetch(`${URL}pets/${currentPet.id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        },
+        body: JSON.stringify({
+          "happiness": currentPet.happiness
+        })
+      })
+    }
+
+    if (currentPet.health <= 0 || currentPet.happiness <= 0) {
+      currentPet.img = "grave.png"
+      renderPets(currentUser.pets)
+      incrementpet.style.display = "none"
+      currentpetstatus.style.display = "none"
+      console.log()
     }
 
   })
-
-
     // delete pet
-
 }
