@@ -336,7 +336,9 @@ function init(){
         "age": pet.age,
         "weight": pet.weight,
         "img": pet.img,
-        "skill_points": pet.skill_points
+        "skill_points": pet.skill_points,
+        "happiness": 3,
+        "health": 3
       })
     }).then(() => {
       renderIncrementPet()
@@ -431,6 +433,9 @@ function init(){
             "health": currentPet.health,
             "happiness": currentPet.happiness
           })
+        }).then(() => {
+          renderIncrementPet()
+          renderCurrentPetStatus(currentPet)
         })
       } // end of hungry === false
     }
@@ -440,6 +445,12 @@ function init(){
       currentPet.hungry = true
       if (currentPet.skill_points < 5) {
         currentPet.skill_points += 1
+      }
+      if (currentPet.happiness > 0) {
+        currentPet.happiness -= 1
+      }
+      if (currentPet.health > 0) {
+        currentPet.health -= 1
       }
       renderIncrementPet()
       renderCurrentPetStatus(currentPet)
@@ -521,6 +532,9 @@ function init(){
             "health": currentPet.health,
             "happiness": currentPet.happiness
           })
+        }).then(() => {
+          renderIncrementPet()
+          renderCurrentPetStatus(currentPet)
         })
       } // end of hungry === false
     }
@@ -546,6 +560,9 @@ function init(){
       //console.log("sleepbtn");
       if (currentPet.happiness > 0) {
         currentPet.happiness -= 1
+      }
+      if (currentPet.health < 5) {
+        currentPet.health += 1
       }
       renderIncrementPet()
       renderCurrentPetStatus(currentPet)
