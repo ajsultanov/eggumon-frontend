@@ -97,6 +97,7 @@ function init(){
     // if user is logged in -> log out
     if (logButton.dataset.action === "logout") {
       currentUser = ""
+      myPetTitle.innerText = ""
       myPetContainer.innerHTML = `
       <img src="./src/img/good.png" alt="">
       <img src="./src/img/splash.png" alt="">
@@ -161,7 +162,7 @@ function init(){
       event.preventDefault()
 
       let name = input.value
-      let specialty = "mango"
+      let specialty = select.value
 
       if (name !== "" && specialty !== "") {
         myFormContainer.style.display = "none"
@@ -185,6 +186,10 @@ function init(){
         })
         .then(r => r.json())
         .then(petData => {
+          currentPet = petData
+          renderIncrementPet()
+          renderCurrentPetStatus(currentPet)
+          // couldnt get the user model to reload otherwise
           fetch(`${URL}users/${currentUser.id}`)
           .then(r => r.json()).then(r => {
             currentUser = r
@@ -239,6 +244,13 @@ function init(){
   myPetContainer.addEventListener("click", (e) => {
     // this function just finds and sets the current pet when a user clicks on a pet in the all pets container
 
+    if (currentPet.age === "egg") {
+      //console.log("EGGGGG!")
+      currentPet.img = "egg_open.png"
+      mutate(currentPet)
+      renderIncrementPet()
+    }
+
     let target = ""
     if (e.target.tagName === "SPAN") {
       target = e.target
@@ -276,11 +288,6 @@ function init(){
       //}, 2000)
     } else {
       status.innerHTML = `<img src="" alt="">`
-    }
-
-    if (currentPet.age === "egg") {
-      //console.log("EGGGGG!")
-      mutate(currentPet)
     }
 
     if (currentPet.dirty === false) {
@@ -436,6 +443,17 @@ function init(){
       }
       renderIncrementPet()
       renderCurrentPetStatus(currentPet)
+
+      fetch(`${URL}pets/${currentPet.id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        },
+        body: JSON.stringify({
+          "skill_points": currentPet.skill_points
+        })
+      })
     }
 
     if(target.id === "cleanbtn"){
