@@ -16,3 +16,7 @@
 > TK demo video/link
 
 Evoking browser games of the '90s and '00s, in Eggumon a user hatches their own (random) monster from an egg. Then they feed, clean up after, and train their pets until they are ready to evolve to the next level, and a new random sprite is generated.
+
+[code](https://github.com/ajsultanov/eggumon-frontend/blob/master/src/index.js)
+
+[sprites!](https://github.com/ajsultanov/eggumon-frontend/tree/master/src/img)
